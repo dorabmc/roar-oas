@@ -1,0 +1,208 @@
+{"openapi": "3.1.0",
+ "info": {
+     "title": "The MatchCraft Roar Connect API",
+     "version": "1.0.0",
+     "description": "This document defines the service provided by MatchCraft's Roar Connect API.
+The API provides read and mutate operations on Connect objects.",
+     "contact": {
+         "name": "Roar Connect API Support",
+         "email": "engineering@matchcraft.com"
+     }
+ },
+ "servers": [
+     {
+         "url": "https://roar.advertiserreports.com/rip/roar",
+         "description": "Production server for the Roar Connect API"
+     },
+     {
+         "url": "https://aws-sandbox.advertiserreports.com:9801/rip/roar",
+         "description": "Sandbox server for the Roar Connect API"
+     }
+     ],
+ "paths": {
+     "/request": {
+         "post": {
+             "operationId": "roarRequest",
+             "description": "The single operation for all Roar Connect API requests",
+             "parameters": [
+                 {
+                     "name": "RoarAuthClientId",
+                     "in": "header",
+                     "description": "The RoarAuthClientId can be found in the Roar API Access section of the Setup > General tab.",
+                     "required": true,
+                     "schema": {
+                         "type": "string"
+                     }
+                 },
+                 {
+                     "name": "RoarAuthUser",
+                     "in": "header",
+                     "description": "The RoarAuthUser is an email address associated with a user created in the Setup > Users tab.",
+                     "required": true,
+                     "schema": {
+                         "type": "string"
+                     }
+                 },
+                 {
+                     "name": "RoarAuthPassword",
+                     "in": "header",
+                     "description": "The RoarAuthPassword is the password used by the email address to log into the platform UI. Roar access can be granted to users with the Admin or Program Manager capability via the Setup > Users tab.",
+                     "required": true,
+                     "schema": {
+                         "type": "string"
+                     }
+                 }
+             ],
+             "requestBody": {
+                 "description": "",
+                 "required": true,
+                 "content": {
+                     "application/json": {
+                         "schema": {
+                             "type": "object",
+                             "properties": {
+                                 "operations": {
+                                     "type": "array",
+                                     "items": {
+                                         "schema": {
+                                             "$ref": "#/components/schemas/Operation"
+                                         }
+                                     }
+                                 }
+                             }
+                         },
+                         "examples": {
+                             "exampleRequest": {
+                                 "summary": "This is an example of a Roar Connect request",
+                                 "value": {
+                                     "operations": [
+                                         {
+                                             "operator": "mutateConnectAccount",
+                                             "operands": {
+                                                 "operator": "ADD",
+                                                 "name": "Test Account"
+                                             }
+                                         }
+                                     ]
+                                 }
+                             }
+                         }
+                     }
+                 }
+             },
+             "responses": {
+                 "200": {
+                     "description": "The singular response structure for all Roar Connect API responses",
+                     "content": {
+                         "application/json": {
+                             "schema": {
+                                 "type": "object",
+                                 "properties": {
+                                     "requestUuid": {
+                                         "type": "string"
+                                     },
+                                     "diagnostics": {
+                                         "type": "array",
+                                         "items": {
+                                             "schema": {
+                                                 "$ref": "#/components/schemas/Diagnostic"
+                                             }
+                                         }
+                                     },
+                                     "operations": {
+                                         "type": "array",
+                                         "items": {
+                                             "schema": {
+                                                 "$ref": "#/components/schemas/OperationResponse"
+                                             }
+                                         }
+                                     }
+                                 }
+                             }
+                         }
+                     }
+                 }
+             }
+         }
+     }
+ },
+ "components": {
+     "schemas": {
+         "Operation": {
+             "type": "object",
+             "properties": {
+                 "operator": {
+                     "schema": {
+                         "$ref": "#/components/schema/Operator"
+                     }
+                 },
+                 "operands": {
+                     "schema": {
+                         "$ref": "#/components/schemas/Operands"
+                     }
+                 }
+             }
+         },
+         "OperationResponse": {
+             "type": "object",
+             "properties": {
+                 "operator": {
+                     "schema": {
+                         "$ref": "#/components/schemas/Operator"
+                     }
+                 },
+                 "operands": {
+                     "schema": {
+                         "$ref": "#/components/schemas/Operands"
+                     }
+                 },
+                 "operationUuid": {
+                     "type": "string"
+                 },
+                 "result": {
+                 },
+                 "diagnostics": {
+                     "type": "array",
+                     "items": {
+                         "schema": {
+                             "$ref": "#/components/schemas/Dignostic"
+                         }
+                     }
+                 }
+             }
+         },
+         "Operator":{
+             "type": "string"
+         },
+         "Operands": {
+             "type": "object"
+         },
+         "Diagnostic": {
+             "type": "object",
+             "properties": {
+                 "type": {
+                     "type": "string"
+                 },
+                 "path": {
+                     "type": "array",
+                     "items": {
+                         "type": "object"
+                     }
+                 },
+                 "key": {
+                     "type": "string"
+                 },
+                 "code": {
+                     "type": "string"
+                 },
+                 "message": {
+                     "type": "string"
+                 },
+                 "detail": {
+                     "type": "object"
+                 }
+             }
+         }
+     }
+ }
+}
