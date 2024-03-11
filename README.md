@@ -1,6 +1,9 @@
 # com.matchcraft/roar-oas
 
-FIXME: my new library.
+Experimental library to develop and OpenAPI 3.1 spec for the
+MatchCraft Roar Connect API.
+
+This is a spike.  May go nowhere.
 
 ## Usage
 
